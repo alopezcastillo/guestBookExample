@@ -18,11 +18,49 @@
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+    <repositories></repositories>
 
     <prerequisites>
         <maven>3.1.0</maven>
     </prerequisites>
 <!-- [END set_versions] -->
+
+<profiles>
+   <profile>
+            <id>debug</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.google.appengine</groupId>
+                        <artifactId>appengine-maven-plugin</artifactId>
+                        <version>${appengine.sdk.version}</version>
+                        <configuration>
+                            <jvmFlags>
+                                <jvmFlag>-Xdebug</jvmFlag>
+                                <jvmFlag>
+                                    -agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=y
+                                </jvmFlag>
+                                <jvmFlag>
+                                    -Ddatastore.backing_store=${project.basedir}/local_db.bin
+                                </jvmFlag>
+                                <jvmFlag>
+                                    -DLocalSearchService.useDirectory=${project.basedir}
+                                </jvmFlag>
+                                <jvmFlag>-XX:MaxPermSize=512m</jvmFlag>
+                            </jvmFlags>
+                            <disableUpdateCheck>true</disableUpdateCheck>
+                            <fullScanSeconds>2</fullScanSeconds>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+</profiles>
+
 
     <dependencies>
         <!-- Compile/runtime dependencies -->
@@ -74,6 +112,8 @@
     <build>
         <!-- for hot reload of the web application-->
         <outputDirectory>${project.build.directory}/${project.build.finalName}/WEB-INF/classes</outputDirectory>
+        
+        <pluginManagement> 
         <plugins>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -132,5 +172,6 @@
                 </configuration>
             </plugin>
         </plugins>
+         </pluginManagement> 
     </build>
 </project>

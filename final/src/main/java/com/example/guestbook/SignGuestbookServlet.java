@@ -67,4 +67,4 @@ public class SignGuestbookServlet extends HttpServlet {
     resp.sendRedirect("/guestbook.jsp?guestbookName=" + guestbookName);
   }
 }
-//[END all]
+
